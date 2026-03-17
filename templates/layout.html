@@ -1,0 +1,276 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Portfolio | Aditya Singh{% endblock %}</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <script>src="https://cdn.tailwindcss.com"</script>
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+   
+</head>
+<body>
+    
+    <!-- Custom Cursor Elements -->
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
+    <!-- Background -->
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="logo">Aditya<span class="neon-text-pink">Singh</span></div>
+        <div class="nav-links">
+            <a href="#hero" class="magnetic-link">Home</a>
+            <a href="#about" class="magnetic-link">About</a>
+            <a href="#portfolio" class="magnetic-link">portfolio</a>
+            <a href="#contact" class="magnetic-link">Contact</a>
+        </div>
+    </nav>
+
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer>
+        <div class="social-icons" style="display: flex; justify-content: center; gap: 20px; padding: 40px 0;">
+            {% comment %} <a href="#" class="btn-secondary" style="border-radius: 50%; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;"><i class="fa-brands fa-linkedin-in" style="font-size:40px;color:red;"></i></a>
+            <a href="#" class="btn-secondary" style="border-radius: 50%; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;">  <i class="fa-brands fa-instagram" style="font-size:40px;color:blue;"></i></a> {% endcomment %}
+              <a href="https://www.instagram.com/aditya4407singh/"
+                     target="_blank"
+                     class="btn-secondary"
+                    style="border-radius:50%; width:50px; height:50px; display:flex; align-items:center; justify-content:center;">
+                   <i class="fa-brands fa-instagram" style="font-size:22px;"></i>
+              </a>
+
+             <a href="https://www.linkedin.com/in/aditya-singh-84b82a324/"
+                   target="_blank"
+                  class="btn-secondary"
+                  style="border-radius:50%; width:50px; height:50px; display:flex; align-items:center; justify-content:center;">
+                  <i class="fa-brands fa-linkedin-in" style="font-size:22px;"></i>
+            </a>
+
+        </div>
+        <p style="text-align: center; color: var(--text-muted); padding-bottom: 20px;">ADITYA SINGH. &copy; {% now "Y" %}</p>
+    </footer>
+
+    <script>
+        // --- 1. ADVANCED CUSTOM CURSOR ---
+        const cursorDot = document.querySelector('.cursor-dot');
+        const cursorOutline = document.querySelector('.cursor-outline');
+        
+        window.addEventListener('mousemove', (e) => {
+            const posX = e.clientX;
+            const posY = e.clientY;
+
+            // Dot follows immediately
+            cursorDot.style.left = `${posX}px`;
+            cursorDot.style.top = `${posY}px`;
+
+            // Outline follows with slight delay (animation in CSS helps, but we keyframe here for smoothness)
+            cursorOutline.animate({
+                left: `${posX}px`,
+                top: `${posY}px`
+            }, { duration: 500, fill: "forwards" });
+        });
+
+        // Hover States
+        document.querySelectorAll('a, button, .project-card, input, textarea').forEach(el => {
+            el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+            el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+        });
+
+
+        // --- 2. 3D TILT EFFECT FOR CARDS ---
+        document.querySelectorAll('.tilt-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const rotateX = ((y - centerY) / centerY) * -10; // Max rotation deg
+                const rotateY = ((x - centerX) / centerX) * 10;
+
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+            });
+
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)';
+            });
+        });
+
+
+        // --- 3. TYPEWRITER EFFECT ---
+        const typeElement = document.getElementById('typing-text');
+        if (typeElement) {
+            const words = JSON.parse(typeElement.getAttribute('data-words'));
+            let wordIndex = 0;
+            let charIndex = 0;
+            let isDeleting = false;
+
+            function type() {
+                const currentWord = words[wordIndex];
+                
+                if (isDeleting) {
+                    typeElement.textContent = currentWord.substring(0, charIndex - 1);
+                    charIndex--;
+                } else {
+                    typeElement.textContent = currentWord.substring(0, charIndex + 1);
+                    charIndex++;
+                }
+
+                let typeSpeed = isDeleting ? 50 : 100;
+
+                if (!isDeleting && charIndex === currentWord.length) {
+                    typeSpeed = 2000; // Pause at end
+                    isDeleting = true;
+                } else if (isDeleting && charIndex === 0) {
+                    isDeleting = false;
+                    wordIndex = (wordIndex + 1) % words.length;
+                    typeSpeed = 500;
+                }
+
+                setTimeout(type, typeSpeed);
+            }
+            document.addEventListener('DOMContentLoaded', type);
+        }
+
+
+        // --- 4. SCROLL ANIMATIONS ---
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if(entry.isIntersecting) entry.target.classList.add('active');
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        
+        // Navbar scroll
+        window.addEventListener('scroll', () => {
+            document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
+        });
+
+
+        // --- 5. PARTICLE BACKGROUND ---
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let w, h, particles = [];
+
+        function resize() { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; }
+        
+        class Particle {
+            constructor() {
+                this.x = Math.random() * w;
+                this.y = Math.random() * h;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+                this.size = Math.random() * 2;
+                this.color = Math.random() > 0.5 ? 'rgba(0, 243, 255,' : 'rgba(255, 0, 255,';
+            }
+            update() {
+                this.x += this.vx; this.y += this.vy;
+                if(this.x < 0 || this.x > w) this.vx *= -1;
+                if(this.y < 0 || this.y > h) this.vy *= -1;
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = this.color + '0.5)';
+                ctx.fill();
+            }
+        }
+
+        function init() {
+            particles = [];
+            for(let i=0; i<80; i++) particles.push(new Particle());
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, w, h);
+            particles.forEach((p, i) => {
+                p.update();
+                p.draw();
+                // Connect
+                for(let j=i+1; j<particles.length; j++) {
+                    const dx = p.x - particles[j].x;
+                    const dy = p.y - particles[j].y;
+                    const dist = Math.sqrt(dx*dx + dy*dy);
+                    if(dist < 100) {
+                        ctx.beginPath();
+                        ctx.strokeStyle = `rgba(255,255,255,${0.1 - dist/1000})`;
+                        ctx.moveTo(p.x, p.y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            });
+            requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('resize', () => { resize(); init(); });
+        resize(); init(); animate();
+
+    </script>
+    {% if messages %}
+       {% for message in messages %}
+          <div class="toast-message">
+             {{ message }}
+         </div>
+     {% endfor %}
+   {% endif %}
+    <!-- Chatbot Widget -->
+<!-- Chatbot Panel -->
+<div id="chatbot-panel">
+  <div id="chatbot-header">
+    🤖 Chat with Aditya's Assistant
+    <span id="chatbot-close">✖</span>
+  </div>
+
+  <div id="chatbot-body">
+    <div class="bot-msg">
+      Hi 👋 I’m Aditya’s assistant.  
+      Ask me about resume, projects, or contact 🙂
+    </div>
+  </div>
+
+  <div id="chatbot-footer"> 
+    <input
+      type="text"
+      id="chatbot-input"
+      placeholder="Type your message..."
+    />
+    <button id="chatbot-send">Send</button>
+  </div>
+</div>
+
+<button id="chatbot-open">💬 Chat </button> 
+
+<script>
+const openBtn = document.getElementById("chatbot-open");
+const closeBtn = document.getElementById("chatbot-close");
+const panel = document.getElementById("chatbot-panel");
+
+openBtn.onclick = () => {
+  panel.style.display = "flex";
+};
+
+closeBtn.onclick = () => {
+  panel.style.display = "none";
+};
+</script>
+
+</body>
+</html>
