@@ -7,12 +7,14 @@ certifi==2025.11.12
 chardet==5.2.0
 charset-normalizer==3.4.4
 click==8.3.1
+cloudinary==1.44.1
 colorama==0.4.6
 cookiecutter==2.6.0
 distro==1.9.0
 dj-database-url==3.1.2
 Django==5.2.8
 django-browser-reload==1.21.0
+django-cloudinary-storage==0.3.0
 django-tailwind==4.4.1
 groq==1.0.0
 gunicorn==25.1.0
