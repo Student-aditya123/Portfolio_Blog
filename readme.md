@@ -6,7 +6,7 @@ A full-stack **Portfolio Blog Web Application** built using **Django**, where us
 
 ## 🌐 Live Demo
 
-👉 Add your deployed link here (from Render)
+👉 https://portfolio-blog-3bbz.onrender.com
 
 ---
 
