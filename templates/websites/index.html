@@ -2,202 +2,604 @@
 {% load static %}
 
 {% block content %}
-<section id="hero" class="section hero shell" data-reveal>
-  <div class="hero-copy">
-    <p class="eyebrow">FULL-STACK + AI ENGINEER</p>
-    <h1>Building product experiences that ship faster, convert better, and scale with confidence.</h1>
-    <p class="lead">I design and engineer modern web products with robust backend architecture, measurable business impact, and world-class UX quality.</p>
-    <div class="cta-row">
-      <a href="#projects" class="btn btn-primary">View Projects</a>
-      <a href="#contact" class="btn btn-secondary">Hire Me</a>
-      <a href="{% static 'resume/aditya_cv.pdf' %}" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">Resume</a>
+
+<!-- Hero Section -->
+ <style>
+/* Open button */
+ #chatbot-open {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: #3b82f6;
+  color: #fff;
+  border: none;
+  padding: 14px 18px;
+  border-radius: 30px;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0 0 20px rgba(59,130,246,.6);
+  z-index: 9999;
+}
+
+/* Main chatbot */
+#chatbot-panel {
+  position: fixed;
+  bottom: 100px;
+  right: 30px;
+  width: 420px;          /* BIG width */
+  height: 520px;         /* BIG height */
+  background: #0b0f18;
+  border-radius: 16px;
+  box-shadow: 0 0 30px rgba(59,130,246,.7);
+  display: none;
+  flex-direction: column;
+  z-index: 9999;
+}
+
+/* Header */
+#chatbot-header {
+  background: linear-gradient(90deg, #3b82f6, #2563eb);
+  padding: 14px;
+  font-weight: bold;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  cursor: move; /* for draggable later */
+}
+
+/* Body */
+#chatbot-body {
+  flex: 1;
+  padding: 14px;
+  overflow-y: auto;
+  color: white;
+  font-size: 14px;
+}
+
+/* Footer */
+#chatbot-footer {
+  display: flex;
+  border-top: 1px solid #1e293b;
+}
+
+#chatbot-input {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  outline: none;
+  background: #020617;
+  color: white;
+}
+
+#chatbot-send {
+  background: #3b82f6;
+  border: none;
+  color: white;
+  padding: 0 18px;
+  cursor: pointer;
+}
+
+/* Messages */
+.bot-msg {
+  background: #1e293b;
+  padding: 10px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  max-width: 85%;
+} 
+
+
+.toast-message {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  background: linear-gradient(145deg, #0b1220, #050914);
+  color: #e5e7eb;
+  padding: 14px 18px;
+  border-radius: 12px;
+  font-size: 14px;
+  box-shadow:
+    0 0 0 1px rgba(59,130,246,0.6),
+    0 0 25px rgba(37,99,235,0.35);
+  z-index: 9999;
+  animation: slideUpFade 4s forwards;
+}
+
+@keyframes slideUpFade {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  10% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+{% comment %} /* Profile Image Wrapper  {% endcomment %}
+ .profile-wrapper {
+    width: 320px;
+    height: 320px;
+    border-radius: 50%;
+    position: relative;
+    margin: 100px auto;
+    overflow: hidden;
+    margin-bottom: 200px;
+}
+
+/* Image */
+.profile-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    position: relative;
+    z-index: 2;
+}
+
+.profile-wrapper::before {
+    content: "";
+    position: absolute;
+    inset: -22px;                 /* makes it look larger */
+    border-radius: 50%;
+    background: radial-gradient(
+        circle,
+        rgba(139,92,246,0.9),
+        rgba(56,189,248,0.5),
+        rgba(0,0,0,0) 70%
+    );
+    filter: blur(12px);           /* glow on black */
+    animation: breathe 4s ease-in-out infinite;
+    z-index: 1;
+}
+
+
+@keyframes breathe {
+    0%   { transform: scale(0.9);  opacity: 0.6; }
+    50%  { transform: scale(1.15); opacity: 1;   }
+    100% { transform: scale(0.9);  opacity: 0.6; }
+}
+
+.profile-wrapper {
+    box-shadow: 0 0 0 2px rgba(139,92,246,0.8);
+}
+.profile-wrapper {
+    margin: 0 auto 40px;
+}
+
+
+#hero {
+    min-height: 100vh;
+    padding-top: 120px;
+    padding-bottom: 120px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.hero-title {
+    margin: 100;
+    line-height: 1.1;
+}
+
+ #about {
+    margin-top: 120px;
+}
+
+#about {
+  display: flex;
+  justify-content: center;
+  padding: 80px 20px;
+  background: #000;
+}
+
+.about-card {
+  max-width: 900px;
+  width: 100%;
+  background: linear-gradient(145deg, #111, #0b0b0b);
+  border-radius: 18px;
+  padding: 40px;
+  color: #fff;
+   box-shadow:
+    0 0 0 1.5px rgba(59,130,246,0.6),        /* blue border */
+    0 0 25px rgba(37,99,235,0.35),           /* outer glow */
+    0 25px 60px rgba(0,0,0,0.9);
+  transform: perspective(1200px) rotateY(-6deg);
+  transition: transform 0.6s ease;
+}
+
+.about-card:hover {
+  transform: perspective(1200px) rotateY(0deg);
+}
+
+.about-card h2 {
+  font-size: 28px;
+  margin-bottom: 12px;
+   color: #60a5fa;
+}
+
+.about-text {
+  color: #bbb;
+  line-height: 1.7;
+  margin-bottom: 30px;
+}
+
+.about-card h3 {
+  margin-bottom: 20px;
+   color: #60a5fa;
+}
+
+.about-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.about-box {
+  background: linear-gradient(145deg, #151515, #0d0d0d);
+  border-radius: 14px;
+  padding: 22px;
+  background: linear-gradient(
+    145deg,
+    #0a1224,
+    #050b1a
+  );
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.about-box:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow:
+    inset 0 0 0 1px rgba(59,130,246,0.6),
+    0 0 20px rgba(37,99,235,0.4),
+    0 20px 40px rgba(0,0,0,1);
+}
+
+.about-box span {
+  font-size: 26px;
+  color: #ffd36a;
+}
+
+.about-box h4 {
+  margin: 10px 0 6px;
+  color: #fff;
+}
+
+.about-box p {
+  font-size: 14px;
+  color: #aaa;
+}
+
+#portfolio {
+  padding: 120px 80px;
+  background: #000;
+}
+
+.portfolio-main-box {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 40px;
+  border-radius: 22px;
+  background: linear-gradient(145deg, #0b0f18, #05070d);
+  box-shadow:
+    0 0 0 1.5px rgba(59,130,246,0.35),   /* blue border */
+    0 30px 80px rgba(0,0,0,0.95);
+  opacity: 1;  
+  transform: perspective(1200px) rotateY(-6deg) translateY(40px);
+  transition: transform 0.6s ease, box-shadow 0.6s ease;
+}
+
+.portfolio-main-box:hover {
+  transform: perspective(1200px) rotateY(0deg);
+  box-shadow:
+    0 0 0 1.5px rgba(59,130,246,0.6),
+    0 0 35px rgba(37,99,235,0.35),
+    0 40px 100px rgba(0,0,0,1);
+}
+.portfolio-main-box .portfolio-card {
+  transform: translateZ(0);
+}
+.portfolio-main-box.show {
+  opacity: 1;
+  transform: perspective(1200px) rotateY(-6deg) translateY(0);
+  transition: all 0.8s ease;
+}
+
+
+@media (max-width: 768px) {
+  .portfolio-main-box {
+    padding: 24px;
+  }
+}
+
+ 
+.portfolio-header h2 {
+  font-size: 32px;
+  color: #fff;
+  margin-bottom: 20px;
+}
+
+.portfolio-pages-bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(145deg, #0b0f18, #05070d);
+  border-radius: 18px;
+  padding: 14px 20px;
+  max-width: 700px;
+  box-shadow:
+    0 0 0 1px rgba(59,130,246,0.25),
+    0 20px 40px rgba(0,0,0,0.9);
+}
+
+.portfolio-pages-bar .pages {
+  display: flex;
+  gap: 28px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.portfolio-pages-bar .page {
+  background: transparent;
+  border: none;
+  color: #9ca3af;
+  font-size: 15px;
+  cursor: pointer;
+  padding: 4px 2px;
+  transition: color 0.3s ease;
+}
+.portfolio-pages-bar .page.active {
+  color: #e5e7eb;
+}
+.portfolio-pages-bar .active-indicator {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #3b82f6;
+  box-shadow:
+    0 0 12px rgba(59,130,246,0.9),
+    0 0 25px rgba(37,99,235,0.6);
+}
+
+.portfolio-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 30px;
+}
+
+.portfolio-card {
+  background: linear-gradient(145deg, #0b1220, #050914);
+  border-radius: 20px;
+  overflow: hidden;
+  padding: 12px; /* THIS creates boxed feel */
+  box-shadow:
+    0 0 0 1px rgba(59,130,246,0.35), /* visible border */
+    0 18px 45px rgba(0,0,0,0.95);
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.portfolio-card:hover {
+  transform: translateY(-10px) scale(1.03);
+  box-shadow:
+    0 0 0 1px rgba(59,130,246,0.6),
+    0 0 30px rgba(37,99,235,0.35),
+    0 30px 70px rgba(0,0,0,1);
+}
+
+.portfolio-card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 14px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.8);
+}
+
+.portfolio-info {
+  padding: 18px;
+}
+
+.portfolio-info h4 {
+  color: #fff;
+  font-size: 16px;
+  margin-bottom: 4px;
+}
+
+.portfolio-info span {
+  font-size: 13px;
+  color: #60a5fa;
+}
+
+.map-box {
+  position: relative;
+  margin-bottom: 40px;
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+.map-box iframe {
+  width: 100%;
+  height: 350px;
+  filter: grayscale(1) invert(1) contrast(1.2);
+}
+
+.map-card {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: #161616;
+  padding: 18px;
+  border-radius: 14px;
+  border: 1px solid #2a2a2a;
+  box-shadow: 0 0 20px rgba(255,170,0,.15);
+}
+</style>
+
+<section id="hero">  
+    <div class="profile-wrapper">
+         <img src="{% static 'images/Profile.png' %}" alt="Profile">
     </div>
-    <div class="social-proof">
-      <span><i class="fa-solid fa-circle-check"></i> Product-ready code quality</span>
-      <span><i class="fa-solid fa-bolt"></i> Performance-first architecture</span>
+    <div class="hero-content">
+        <h1><span style="font-size: 2.5rem; margin= -10px">HELLO 👋</span></h1>
+        <h1 class="hero-title reveal">
+            I'M <span class="glowing-3d-wobble" data-text="{{ profile.name|upper }}">{{ profile.name|default:"Aditya Singh"|upper }}</span><br>
+            <span style="font-size: 0.6em; color: var(--text-muted);">I AM A </span>
+            <span class="neon-text-pink" id="typing-text" data-words='["FULL STACK PYTHON","AI DEVELOPER", "UI/UX DESIGNER"]'></span>
+            <span class="typing-cursor"></span>
+        </h1>
+        <p class="reveal" style="margin-top: 20px; font-size: 1.2rem; color: var(--text-muted);">
+            A passionate Full Stack Python AI Developer 🚀
+            <br>having experience in building web applications with Django/Javascript/React.js
+            <br> and AI solutions with Machine Learning.
+        </p>
+        <div class="hero-actions reveal" style="transition-delay: 0.2s;">
+            <a href="{% static 'resume/aditya_cv.pdf' %}" class="btn btn-primary">See My Resume</a>
+            <a href="#contact" class="btn btn-secondary" style="margin-left: 20px;">Contact Me</a>
+        </div>
+    </div>
+</section>
+
+ 
+<!-- About Section -->
+ <section id="about">
+  <div class="about-card">
+    <h2>About Me</h2>
+    <p style="color: var(--text-muted)">
+            I am a Computer Science Engineering student with a strong interest in
+        <span>Web Development</span> and <span>Problem Solving</span>.
+        I enjoy building scalable web applications using modern technologies
+        and continuously improving my skills through real-world projects.
+        </p>
+        <p class="about-text">
+        Currently, I focus on <span>Django</span>, <span>MERN Stack</span>,
+        and open-source contributions while preparing for product-based roles.
+    </p>
+
+    <h3>What I'm Doing</h3>
+
+    <div class="about-grid">
+      <div class="about-box">
+        <span>🎨</span>
+        <h4>Web Design</h4>
+        <p>Modern and high-quality design made at a professional level.</p>
+      </div>
+
+      <div class="about-box">
+        <span>💻</span>
+        <h4>Web Development</h4>
+        <p>High-quality development of sites at the professional level.</p>
+      </div>
+
+      <div class="about-box">
+        <span>📱</span>
+        <h4>Mobile Apps</h4>
+        <p>Professional development of applications for iOS and Android.</p>
+      </div>
+
+      <div class="about-box">
+        <span>📸</span>
+        <h4>Photography</h4>
+        <p>I make high-quality photos of any category at a professional level.</p>
+      </div>
     </div>
   </div>
-  <div class="hero-image-wrap">
-    <img src="{% static 'images/Profile.png' %}" loading="eager" fetchpriority="high" width="440" height="440" alt="Portrait of Aditya Singh" class="hero-image">
-  </div>
 </section>
 
-<section id="about" class="section shell" data-reveal>
-  <div class="section-heading">
-    <p class="eyebrow">ABOUT</p>
-    <h2>Engineer mindset. Product obsession.</h2>
-  </div>
-  <div class="about-grid">
-    <article class="panel">
-      <h3>Who I am</h3>
-      <p>I am a Computer Science engineer focused on building high-quality, production-grade digital products. My work blends backend reliability, frontend polish, and practical AI integrations.</p>
-    </article>
-    <article class="panel">
-      <h3>How I work</h3>
-      <p>I prioritize clean architecture, accessibility, and delivery velocity. I optimize for outcomes: faster load times, better retention, and reduced operational friction.</p>
-    </article>
-    <article class="panel">
-      <h3>Core stack</h3>
-      <p>Django, React, REST APIs, PostgreSQL, Tailwind-inspired design systems, and AI feature integration for workflow automation.</p>
-    </article>
-  </div>
-</section>
+<!-- Portfolio Section -->
+<section id="portfolio">
+ <div class="portfolio-main-box">
+   <div class="portfolio-header">
+     <h2>Portfolio</h2>
+  <div class="portfolio-pages-bar">
 
-<section id="proof" class="section shell" data-reveal>
-  <div class="section-heading">
-    <p class="eyebrow">PROOF OF WORK</p>
-    <h2>Execution with measurable outcomes.</h2>
-  </div>
-  <div class="stats-grid">
-    <article class="stat-card"><h3 data-count="18">0</h3><p>Production projects delivered</p></article>
-    <article class="stat-card"><h3 data-count="96">0</h3><p>Lighthouse performance target</p></article>
-    <article class="stat-card"><h3 data-count="42">0</h3><p>Average API response improvement (%)</p></article>
-    <article class="stat-card"><h3 data-count="8">0</h3><p>AI-driven internal tools built</p></article>
-  </div>
-</section>
+  <ul class="pages">
+    <li>
+      <button class="page active" data-filter="all">All</button>
+    </li>
+    <li>
+      <button class="page" data-filter="web design">Web Design</button>
+    </li>
+    <li>
+      <button class="page" data-filter="applications">Applications</button>
+    </li>
+    <li>
+      <button class="page" data-filter="web development">Web Development</button>
+    </li>
+  </ul>
 
-<section id="projects" class="section shell" data-reveal>
-  <div class="section-heading section-row">
-    <div>
-      <p class="eyebrow">FEATURED PROJECTS</p>
-      <h2>Premium, impact-focused product builds.</h2>
+  <span class="active-indicator"></span>
+
+</div>
+
+  <div class="portfolio-grid">
+    <div class="portfolio-card">
+      <img src="{% static 'images/Fund.png' %}" alt="">
+      <div class="portfolio-info">
+        <h4>Finance Dashboard</h4>
+        <span>Web Development</span>
+      </div>
     </div>
-    <a href="https://github.com/Student-aditya123" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">See All on GitHub</a>
-  </div>
 
-  <div class="project-grid">
-    <article class="project-card">
-      <img src="{% static 'images/Fund.png' %}" loading="lazy" width="640" height="380" alt="Finance dashboard analytics interface">
-      <div class="project-content">
-        <h3>Finance Dashboard</h3>
-        <p>A data-rich analytics platform for tracking market exposure, risk events, and KPIs in real time.</p>
-        <ul class="badge-list"><li>Django</li><li>Chart.js</li><li>PostgreSQL</li></ul>
-        <p class="metric">Impact: Improved report generation speed by 55%.</p>
-        <div class="project-links">
-          <a href="https://github.com/Student-aditya123" target="_blank" rel="noopener noreferrer" aria-label="Finance Dashboard source code">GitHub</a>
-          <a href="#" aria-label="Finance Dashboard live demo">Live Demo</a>
-        </div>
+    <div class="portfolio-card">
+      <img src="{% static 'images/Orion.png' %}" alt="">
+      <div class="portfolio-info">
+        <h4>Orion Analytics</h4>
+        <span>Web Development</span>
       </div>
-    </article>
-
-    <article class="project-card">
-      <img src="{% static 'images/Orion.png' %}" loading="lazy" width="640" height="380" alt="AI analytics product interface named Orion">
-      <div class="project-content">
-        <h3>Orion Analytics</h3>
-        <p>An AI-assisted insights suite that highlights anomalies and recommends actions from product telemetry.</p>
-        <ul class="badge-list"><li>Python</li><li>Machine Learning</li><li>REST API</li></ul>
-        <p class="metric">Impact: Reduced manual analysis time by 38%.</p>
-        <div class="project-links">
-          <a href="https://github.com/Student-aditya123" target="_blank" rel="noopener noreferrer" aria-label="Orion Analytics source code">GitHub</a>
-          <a href="#" aria-label="Orion Analytics live demo">Live Demo</a>
-        </div>
-      </div>
-    </article>
-
-    <article class="project-card">
-      <img src="{% static 'images/Fundo.png' %}" loading="lazy" width="640" height="380" alt="Mobile-first fintech style UI showcase">
-      <div class="project-content">
-        <h3>Fundo Product Experience</h3>
-        <p>A conversion-focused product redesign for a modern finance app with cohesive interaction patterns.</p>
-        <ul class="badge-list"><li>UI System</li><li>Design Ops</li><li>Accessibility</li></ul>
-        <p class="metric">Impact: Increased onboarding completion by 24%.</p>
-        <div class="project-links">
-          <a href="https://github.com/Student-aditya123" target="_blank" rel="noopener noreferrer" aria-label="Fundo source code">GitHub</a>
-          <a href="#" aria-label="Fundo live demo">Live Demo</a>
-        </div>
-      </div>
-    </article>
-
-    <article class="project-card">
-      <img src="{% static 'images/Brownlio.png' %}" loading="lazy" width="640" height="380" alt="Cross-platform app called Brownlio">
-      <div class="project-content">
-        <h3>Brownlio App</h3>
-        <p>A mobile-ready application with seamless auth flows and performance-focused screen architecture.</p>
-        <ul class="badge-list"><li>React</li><li>Node APIs</li><li>Mobile UX</li></ul>
-        <p class="metric">Impact: Achieved 4.7/5 average user testing score.</p>
-        <div class="project-links">
-          <a href="https://github.com/Student-aditya123" target="_blank" rel="noopener noreferrer" aria-label="Brownlio source code">GitHub</a>
-          <a href="#" aria-label="Brownlio live demo">Live Demo</a>
-        </div>
-      </div>
-    </article>
-  </div>
-</section>
-
-<section id="timeline" class="section shell" data-reveal>
-  <div class="section-heading">
-    <p class="eyebrow">EXPERIENCE & ACHIEVEMENTS</p>
-    <h2>What I have built and improved recently.</h2>
-  </div>
-  <div class="timeline">
-    <article>
-      <span>2026</span>
-      <h3>Built AI workflow assistant prototypes</h3>
-      <p>Created internal productivity tools for automating repetitive reporting and data triage processes.</p>
-    </article>
-    <article>
-      <span>2025</span>
-      <h3>Shipped portfolio and analytics projects</h3>
-      <p>Delivered full-stack projects emphasizing low-latency APIs, maintainable structure, and design consistency.</p>
-    </article>
-    <article>
-      <span>2024</span>
-      <h3>Deepened DSA and backend engineering</h3>
-      <p>Expanded problem-solving capability and improved architecture decisions through continuous practice.</p>
-    </article>
-  </div>
-</section>
-
-<section id="profiles" class="section shell" data-reveal>
-  <div class="section-heading">
-    <p class="eyebrow">CODING PROFILES</p>
-    <h2>Public proof of consistency.</h2>
-  </div>
-  <div class="profile-cards">
-    <a class="panel" href="https://github.com/Student-aditya123" target="_blank" rel="noopener noreferrer">
-      <h3>GitHub</h3>
-      <p>Explore repositories, commit history, and project source code.</p>
-    </a>
-    <a class="panel" href="https://leetcode.com" target="_blank" rel="noopener noreferrer">
-      <h3>LeetCode</h3>
-      <p>Algorithm practice and problem-solving track record.</p>
-    </a>
-  </div>
-</section>
-
-<section id="contact" class="section shell" data-reveal>
-  <div class="section-heading">
-    <p class="eyebrow">CONTACT</p>
-    <h2>Let’s build a high-impact product together.</h2>
-  </div>
-  <div class="contact-layout">
-    <div class="panel">
-      <h3>Direct contact</h3>
-      <p>Email: <a href="mailto:adityasingh4407@gmail.com">adityasingh4407@gmail.com</a></p>
-      <p>Location: Lucknow, India</p>
-      <p>Availability: Open to internships and full-time roles.</p>
     </div>
-    <form class="panel contact-form" method="post" action="{% url 'home' %}">
-      {% csrf_token %}
-      <label for="name">Name</label>
-      <input id="name" name="name" type="text" required autocomplete="name">
 
-      <label for="email">Email</label>
-      <input id="email" name="email" type="email" required autocomplete="email">
+    <div class="portfolio-card">
+      <img src="{% static 'images/Fundo.png' %}" alt="">
+      <div class="portfolio-info">
+        <h4>Fundo</h4>
+        <span>Web Design</span>
+      </div>
+    </div>
 
-      <label for="message">Message</label>
-      <textarea id="message" name="message" rows="5" required></textarea>
-
-      <button type="submit" class="btn btn-primary">Send Message</button>
-    </form>
+    <div class="portfolio-card">
+      <img src="{% static 'images/Brownlio.png' %}" alt="">
+      <div class="portfolio-info">
+        <h4>Brownlio App</h4>
+        <span>Applications</span>
+      </div>
+    </div>
   </div>
+ </div>
 </section>
+<!-- Contact Section -->
+<section id="contact">
+    <div class="section-header reveal">
+        <h2 class="section-title">Contact</h2>
+        <div class="map-box">
+    <iframe 
+      src="https://maps.google.com/maps?q=Lucknow&t=&z=13&ie=UTF8&iwloc=&output=embed">
+    </iframe>
+    </div>
 
-{% if messages %}
-  <div class="toast-stack" aria-live="polite" aria-atomic="true">
-    {% for message in messages %}
-      <div class="toast">{{ message }}</div>
-    {% endfor %}
-  </div>
-{% endif %}
+    <div class="glass-panel tilt-card reveal" style="max-width: 600px; margin: 0 auto; padding: 40px;">
+        <form method="POST" action="{% url 'home' %}">
+            {% csrf_token %}
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; margin-bottom: 8px; color: var(--primary-neon); font-size: 0.8rem;">NAME</label>
+                <input type="text" name="name" class="form-input" required>
+            </div>
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; margin-bottom: 8px; color: var(--primary-neon); font-size: 0.8rem;">EMAIL</label>
+                <input type="email" name="email" class="form-input" required>
+            </div>
+            <div style="margin-bottom: 30px;">
+                <label style="display: block; margin-bottom: 8px; color: var(--primary-neon); font-size: 0.8rem;">SEND MESSAGE</label>
+                <textarea name="message" rows="4" class="form-input" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%;">SUBMIT</button>
+        </form>
+    </div>
+</section>
 {% endblock %}
